@@ -51,6 +51,53 @@ def sans_accent(texte):
     return "".join(c for c in decompose if unicodedata.category(c) != "Mn")
 
 mots = ["Python", "réseau", "clavier", "transpiration", "bromance", "procrastination", "Éléphant", "équipe", "cage à puff"]
+dessins = [
+    "",   # 0 erreur : rien
+    r"""
+=========""",   # 1 : le sol
+    r"""
+   |
+   |
+   |
+   |
+   |
+=========""",   # 2 : le poteau
+    r"""
+   +----+
+   |
+   |
+   |
+   |
+=========""",   # 3 : la poutre
+    r"""
+   +----+
+   |    O
+   |
+   |
+   |
+=========""",   # 4 : la tête
+    r"""
+   +----+
+   |    O
+   |    |
+   |
+   |
+=========""",   # 5 : le corps
+    r"""
+   +----+
+   |    O
+   |   /|\
+   |
+   |
+=========""",   # 6 : les bras
+    r"""
+   +----+
+   |    O
+   |   /|\
+   |   / \
+   |
+=========""",   # 7 : les jambes, perdu
+]
 
 # ---------- Une partie de Pendu ----------
 
@@ -62,6 +109,7 @@ def jouer():
     deja_dites = []
 
     while erreurs < 7 and "_" in cache:  # Tant que la variable erreurs est inférieure à 7 et qu'il reste des '_' on continue, sinon on arrête
+        print(dessins[erreurs])
         print(" ".join(cache), "| erreurs :", erreurs, "| déjà proposées :", deja_dites)
         lettre = input("Une lettre : ").upper()
 
@@ -89,6 +137,7 @@ def jouer():
         return True  # Garde True pour une victoire pour l'enregistrement dans le Hall of Fame
     else:
         print("Perdu, le mot était", mot)
+        print(dessins[erreurs])
         return False
 
 # ---------- Programme principal ----------
