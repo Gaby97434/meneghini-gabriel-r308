@@ -1,5 +1,6 @@
 import random
 import unicodedata
+import getpass 
 
 # ---------- Fonctions de la partie A ----------
 
@@ -32,7 +33,7 @@ def charger(chemin):
         pass
     return d
 
-# ---------- Fonctions ----------
+# ---------- Fonctions du Pendu ----------
 
 def choisir_mot(liste):
     # Renvoie un mot de la liste tiré au hasard avec random.choice, en majuscules
@@ -50,10 +51,20 @@ def sans_accent(texte):
     # "Mn" = catégorie des accents collés à une lettre : on les enlève, on garde le reste
     return "".join(c for c in decompose if unicodedata.category(c) != "Mn")
 
+def demander_mot():
+    # Le joueur 1 tape un mot secret, on le redemande tant qu'il est invalide
+    while True:
+        mot = getpass.getpass("Joueur 1, tape le mot : ").strip().upper()  # Comme input, mais sans afficher la saisie (le joueur 2 ne doit pas voir le mot)
+        if mot != "" and all(c.isalpha() or c == " " for c in mot):             
+            # Redemande tant que le mot est invalide : on ne sort (return) que sur un mot correct
+            # Refuse vide, chiffres et symboles : sinon le joueur 2 ne pourrait pas gagner
+            return mot
+        print("Mot invalide tricheur : lettres et espaces uniquement")
+
 mots = ["Python", "réseau", "clavier", "transpiration", "bromance", "procrastination", "Éléphant", "équipe", "cage à puff"]
 dessins = [
     "",   # 0 erreur : rien
-    r"""
+    r"""  # r" ""..."" " : le "\" reste un simple caractère, il n'est pas interprété
 =========""",   # 1 : le sol
     r"""
    |
@@ -101,15 +112,16 @@ dessins = [
 
 # ---------- Une partie de Pendu ----------
 
-def jouer():
+def jouer(mot):  # Le mot est donné en paramètre : jouer() ne sait pas s'il vient de l'ordi ou du joueur 1
     # Joue une partie de Pendu, renvoie True si le joueur a gagné, False sinon
-    mot = choisir_mot(mots)
     cache = masque(mot)
     erreurs = 0
     deja_dites = []
 
     while erreurs < 7 and "_" in cache:  # Tant que la variable erreurs est inférieure à 7 et qu'il reste des '_' on continue, sinon on arrête
-        print(dessins[erreurs])
+        print(dessins[erreurs])  
+        # Dessins[erreurs] : le nombre d'erreurs sert d'indice dans la liste
+        # la boucle s'arrête à 7 erreurs avant de l'afficher : on montre le pendu complet
         print(" ".join(cache), "| erreurs :", erreurs, "| déjà proposées :", deja_dites)
         lettre = input("Une lettre : ").upper()
 
@@ -151,10 +163,22 @@ while nom == "" or ":" in nom:
     
 print("Bienvenue dans le jeu du pendu", nom,"t'es prêt ?" )
 
-while True:  # Fonction de rejouer avec l'enregistrement du score en fonction des victoires
-    if jouer():
-        scores[nom] = scores.get(nom, 0.0) + 1
-    print("Tes victoires :", scores.get(nom, 0.0))
-    sauvegarder(scores, "scores.txt")
+nb_joueurs = input("On joue à combien (1/2) ? :")
+while nb_joueurs not in ("1", "2"):
+    nb_joueurs = input("Tape 1 ou 2 c'est marqué : ")
+while True:
+    if nb_joueurs == "1":
+        mot = choisir_mot(mots)
+    else:
+        mot = demander_mot()
+
+    gagne = jouer(mot)
+
+    if nb_joueurs == "1":      # score compté seulement en solo : en duo, le joueur 1 pourrait souffler le mot
+        if gagne:
+            scores[nom] = scores.get(nom, 0.0) + 1
+        print("Tes victoires :", scores.get(nom, 0.0))
+        sauvegarder(scores, "scores.txt")
+
     if input("Rejouer ? (o/n) ").lower() != "o":
         break
