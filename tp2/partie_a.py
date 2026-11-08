@@ -44,27 +44,26 @@ class Grille:
             for case in ligne:
                 if case == " ": # Test pour voir si la case est encore libre ou pas 
                     return False     # une case libre : pas plein
-        return True                  # on a tout vu, aucune libre
+        return True                  # on a tout vu, aucune libre      
 
 
-       
-
-# ---------- Tests ----------
-g = Grille()
-print(g.jouer(0, 0, "X"))   # True
-print(g.jouer(0, 0, "O"))   # False (occupée)
-print(g.jouer(3, 0, "O"))   # False (hors grille)
-print(g.jouer(-1, 0, "O"))  # False (hors grille)
-print(g.cases)
-g.jouer(0, 1, "O")
-g.jouer(1, 1, "X")
-g.afficher()
-print(g.est_gagnant("X"))   # False
-g.jouer(2, 2, "X")
-print(g.est_gagnant("X"))   # True (diagonale)
-print(g.est_plein())        # False
-g2 = Grille()
-g2.jouer(0, 2, "O")
-g2.jouer(1, 1, "O")
-g2.jouer(2, 0, "O")
-print(g2.est_gagnant("O"))   # True (diagonale inverse)
+if __name__ == "__main__":
+    # ---------- Tests ----------
+    g = Grille()
+    print(g.jouer(0, 0, "X"))   # True
+    print(g.jouer(0, 0, "O"))   # False (occupée)
+    print(g.jouer(3, 0, "O"))   # False (hors grille)
+    print(g.jouer(-1, 0, "O"))  # False (hors grille)
+    print(g.cases)
+    g.jouer(0, 1, "O")
+    g.jouer(1, 1, "X")
+    g.afficher()
+    print(g.est_gagnant("X"))   # False
+    g.jouer(2, 2, "X")
+    print(g.est_gagnant("X"))   # True (diagonale)
+    print(g.est_plein())        # False
+    g2 = Grille()
+    g2.jouer(0, 2, "O")
+    g2.jouer(1, 1, "O")
+    g2.jouer(2, 0, "O")
+    print(g2.est_gagnant("O"))   # True (diagonale inverse)
