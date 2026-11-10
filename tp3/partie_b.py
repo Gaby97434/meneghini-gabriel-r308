@@ -6,10 +6,10 @@ class Bibliotheque:
         self.utilisateurs = {}    # nom -> Utilisateur
 
     def ajouter_livre(self, livre):
-        self.livres[livre.titre] = livre                       # self.livres[livre.titre] = livre
+        self.livres[livre.titre] = livre                       # ajoute le livre au dictionnaire avec son titre, si le titre existe déjà, il est écrasé
 
     def ajouter_utilisateur(self, utilisateur):
-        self.utilisateurs[utilisateur.nom] = utilisateur                       
+        self.utilisateurs[utilisateur.nom] = utilisateur       # ajoute l'utilisateur à la liste avec son nom                
 
     def emprunter(self, nom, titre):
         # True si l'emprunt réussit, False sinon (nom/titre inconnu, déjà emprunté)
@@ -34,12 +34,12 @@ class Bibliotheque:
         print("Disponibles :")
         for livre in self.livres.values():
             if livre.disponible:
-                livre.afficher()
+                livre.afficher() # Affiche la liste des livres disponibles
         print("Empruntés :")
         for livre in self.livres.values():
-            if not livre.disponible:
-                livre.afficher()                       
-
+            if not livre.disponible: 
+                livre.afficher()  # Affiche la liste des livres empruntés                      
+ 
 
 if __name__ == "__main__":
 
@@ -55,3 +55,6 @@ if __name__ == "__main__":
     b.afficher_livres()
     print(b.rendre("Léo", "1984"))       # False : ce n'est pas son livre
     print(b.rendre("Ana", "1984"))       # True
+
+    print(b.rendre("Zoé", "1984"))    # False : nom inconnu
+    print(b.rendre("Ana", "Dune"))    # False : titre inconnu
